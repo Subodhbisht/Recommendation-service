@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
@@ -47,12 +46,9 @@ public class MovieServiceClient {
     }
 
     public List<MovieSummary> getByIds(List<Long> ids) {
-        var joinedIds = ids.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
         return getMovies(uriBuilder -> uriBuilder
                 .path("/api/movies/batch")
-                .queryParam("ids", joinedIds)
+                .queryParam("ids", ids)
                 .build());
     }
 

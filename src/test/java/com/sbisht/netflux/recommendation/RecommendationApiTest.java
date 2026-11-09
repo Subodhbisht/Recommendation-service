@@ -60,7 +60,7 @@ class RecommendationApiTest {
     @DisplayName("Should return home recommendations aggregated from upstream services")
     void shouldReturnHomeRecommendations() {
         expectWatchlist("[1, 2]");
-        expectMovies("http://movie-service/api/movies/batch?ids=1,2", "[" + MOVIE_1 + "," + MOVIE_2 + "]");
+        expectMovies("http://movie-service/api/movies/batch?ids=1&ids=2", "[" + MOVIE_1 + "," + MOVIE_2 + "]");
         expectMovies("http://movie-service/api/movies/popular?limit=20", "[" + MOVIE_3 + "]");
         expectMovies("http://movie-service/api/movies/latest?limit=20", "[" + MOVIE_2 + "," + MOVIE_3 + "]");
         expectMovies("http://movie-service/api/movies/search?genre=Action&limit=20", "[" + MOVIE_1 + "," + MOVIE_3 + "]");

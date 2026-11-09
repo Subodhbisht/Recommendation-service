@@ -24,35 +24,33 @@ public class MovieServiceClient {
     }
 
     public List<MovieSummary> getPopular(Integer limit) {
-        return getMovies(uriBuilder -> uriBuilder
-                .path("/api/movies/popular")
-                .queryParam("limit", limit)
-                .build());
+        return fetch("/api/movies/popular?limit={limit}", limit);
     }
 
     public List<MovieSummary> getLatest(Integer limit) {
-        return getMovies(uriBuilder -> uriBuilder
-                .path("/api/movies/latest")
-                .queryParam("limit", limit)
-                .build());
+        return fetch("/api/movies/latest?limit={limit}", limit);
     }
 
     public List<MovieSummary> searchByGenre(String genre, Integer limit) {
-        return getMovies(uriBuilder -> uriBuilder
-                .path("/api/movies/search")
-                .queryParam("genre", genre)
-                .queryParam("limit", limit)
-                .build());
+        return fetch("/api/movies/search?genre={genre}&limit={limit}", genre, limit);
     }
 
     public List<MovieSummary> getByIds(List<Long> ids) {
-        return getMovies(uriBuilder -> uriBuilder
+        return fetch(uriBuilder -> uriBuilder
                 .path("/api/movies/batch")
                 .queryParam("ids", ids)
                 .build());
     }
 
-    private List<MovieSummary> getMovies(Function<UriBuilder, URI> uriFunction) {
+    private List<MovieSummary> fetch(String uriTemplate, Object... uriVariables) {
+        var movies = restClient.get()
+                .uri(uriTemplate, uriVariables)
+                .retrieve()
+                .body(MOVIE_LIST);
+        return Objects.requireNonNullElse(movies, List.of());
+    }
+
+    private List<MovieSummary> fetch(Function<UriBuilder, URI> uriFunction) {
         var movies = restClient.get()
                 .uri(uriFunction)
                 .retrieve()
